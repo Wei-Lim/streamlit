@@ -1,4 +1,7 @@
 streamlit
+streamlit_ldap_authenticator
 pandas
 numpy
+openpyxl
+matplotlib
 # Add other dependencies here
