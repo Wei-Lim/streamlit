@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  streamlit:
+    image: streamlit-app:latest
+    container_name: streamlit-daten
+    ports:
+      - "8501:8501"
+    volumes:
+      - /home/pit/projects/streamlit/0_data/:/app/0_data/
