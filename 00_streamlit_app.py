@@ -14,7 +14,6 @@ hide_streamlit_style = """
     [data-testid="stHeader"] {visibility: hidden;}   /* Hides the Streamlit header */
     </style>
     """
-
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 # Declare the authentication object using credentials and session settings from Streamlit secrets
@@ -25,32 +24,43 @@ auth = Authenticate(
 )
 
 # Login Process
-# Prompt the user to log in using their full email address (e.g., w.truong@pracht.com)
 user = auth.login()
 
+# Display login instructions only if the user is not logged in
+if user is None:
+    st.markdown("### Anweisungen zur Anmeldung")
+    st.markdown("Bitte geben Sie Ihre vollständige E-Mail-Adresse (z. B. `j.pracht@pracht.com`) ein, um sich anzumelden.")
+    st.markdown("Hinweis: Das Passwort ist dasselbe wie bei der Windows-Anmeldung (LDAP).")
+
 # Load the list of authorized users from a CSV file
-user_df = pd.read_csv('0_data/user_authorised.txt', header=None, names=['Email'])
+user_df = pd.read_csv('0_data/user_authorised.txt')
 
 # Check if the login was successful
 if user is not None:
-
     # Display a logout form with a welcome message
     auth.createLogoutForm({'message': f"Welcome {user['displayName']}"})
 
     # Verify if the logged-in user is in the list of authorized users
-    user_is_authorised = user['userPrincipalName'] in user_df['Email'].values
+    user_row = user_df[user_df['Email'] == user['userPrincipalName']]
     
-    # If the user is authorized, display the available pages
-    if user_is_authorised:
-        
-        # Pages can be defined here
-        pim  = st.Page("01_pim.py", title="PIM Abgleich", icon=":material/inventory:")
-        epd  = st.Page("02_epd.py", title="EPD Daten", icon=":material/eco:")
-        test = st.Page("99_test_app.py", title="Test App", icon=":material/bug_report:")
+    if not user_row.empty:
+        # Extract the authorized apps for the logged-in user
+        authorized_apps = user_row['AuthorizedApps'].values[0].split(',')
+
+        # Define available pages in a dictionary
+        all_apps = {
+            "pim": st.Page("01_pim.py", title="PIM Abgleich", icon=":material/inventory:"),
+            "epd": st.Page("02_epd.py", title="EPD Daten", icon=":material/eco:"),
+            "plty": st.Page("03_plotly.py", title="Vertriebsstatistik", icon=":material/monitoring:"),
+            "test": st.Page("99_test_app.py", title="Test App", icon=":material/bug_report:")
+        }
+
+        # Filter available pages based on user authorization
+        pages_to_display = [all_apps[app.strip()] for app in authorized_apps if app.strip() in all_apps]
 
         # Set up navigation between the pages
-        pg = st.navigation([pim, epd, test])
-        
+        pg = st.navigation(pages_to_display)
+
         # Run the selected page
         pg.run()
     else:
