@@ -1,4 +1,5 @@
-Email,Category,AuthorizedApps
-w.truong@pracht.com,Admin,"pim,epd,plty,test"
-j.scholz@pracht.com,User,"pim,epd"
-j.harms@pracht.com,User,"epd"
+Email,AuthorizedApps
+w.truong@pracht.com,"pim,epd,plty,test"
+j.scholz@pracht.com,"pim,epd"
+j.harms@pracht.com,"epd"
+labor@pracht.com,"pim"

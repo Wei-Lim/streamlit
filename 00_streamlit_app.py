@@ -38,7 +38,7 @@ user_df = pd.read_csv('0_data/user_authorised.txt')
 # Check if the login was successful
 if user is not None:
     # Display a logout form with a welcome message
-    auth.createLogoutForm({'message': f"Welcome {user['displayName']}"})
+    auth.createLogoutForm({'message': f"Welcome {user['displayName']} ({user['userPrincipalName']})"})
 
     # Verify if the logged-in user is in the list of authorized users
     user_row = user_df[user_df['Email'] == user['userPrincipalName']]
