@@ -32,16 +32,17 @@ if user is None:
     st.markdown("Bitte geben Sie Ihre vollständige E-Mail-Adresse (z. B. `j.pracht@pracht.com`) ein, um sich anzumelden.")
     st.markdown("Hinweis: Das Passwort ist dasselbe wie bei der Windows-Anmeldung (LDAP).")
 
+
 # Load the list of authorized users from a CSV file
 user_df = pd.read_csv('0_data/user_authorised.txt')
 
 # Check if the login was successful
 if user is not None:
     # Display a logout form with a welcome message
-    auth.createLogoutForm({'message': f"Welcome {user['displayName']} ({user['userPrincipalName']})"})
+    auth.createLogoutForm({'message': f"Welcome {user['displayName']}"})
 
     # Verify if the logged-in user is in the list of authorized users
-    user_row = user_df[user_df['Email'] == user['userPrincipalName']]
+    user_row = user_df[user_df['Email'] == user['userPrincipalName'].lower()]
     
     if not user_row.empty:
         # Extract the authorized apps for the logged-in user
