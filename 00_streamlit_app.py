@@ -3,18 +3,18 @@ import pandas as pd
 from streamlit_ldap_authenticator import Authenticate
 
 # Set up the Streamlit page with a title and an icon
-# st.set_page_config(page_title="Daten-Apps", page_icon=":material/menu:")
+st.set_page_config(page_title="Daten-Apps", page_icon=":material/menu:")
 
-# # CSS to hide the Streamlit menu and footer
-# hide_streamlit_style = """
-#     <style>
-#     #MainMenu {visibility: hidden;}
-#     footer {visibility: hidden;}
-#     [data-testid="stToolbar"] {visibility: hidden;}  /* Hides the entire toolbar including "Deploy" */
-#     [data-testid="stHeader"] {visibility: hidden;}   /* Hides the Streamlit header */
-#     </style>
-#     """
-# st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+# CSS to hide the Streamlit menu and footer
+hide_streamlit_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    [data-testid="stToolbar"] {visibility: hidden;}  /* Hides the entire toolbar including "Deploy" */
+    [data-testid="stHeader"] {visibility: hidden;}   /* Hides the Streamlit header */
+    </style>
+    """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 # Declare the authentication object using credentials and session settings from Streamlit secrets
 auth = Authenticate(
@@ -32,9 +32,9 @@ if user is None:
     st.markdown("Bitte geben Sie Ihre vollständige E-Mail-Adresse (z. B. `j.pracht@pracht.com`) ein, um sich anzumelden.")
     st.markdown("Hinweis: Das Passwort ist dasselbe wie bei der Windows-Anmeldung (LDAP).")
 
-st.markdown("### TEST")
-st.markdown(user['userPrincipalName'])
-st.markdown(user)
+# # For displaying the dataset from LDAP-Server
+# st.markdown("### TEST")
+# st.markdown(user)
 
 # Load the list of authorized users from a CSV file
 user_df = pd.read_csv('0_data/user_authorised.txt')
