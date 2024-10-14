@@ -2,4 +2,5 @@ Email,AuthorizedApps
 w.truong@pracht.com,"pim,epd,plty,test"
 j.scholz@pracht.com,"pim,epd"
 j.harms@pracht.com,"epd"
+p.klos@pracht.com,"epd"
 labor@pracht.com,"pim"
