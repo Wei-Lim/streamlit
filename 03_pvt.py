@@ -29,14 +29,27 @@ mysql_con_string = f"mysql+pymysql://{user}:{password}@{host}/{database}"
 mysql_engine = create_engine(mysql_con_string)
 
 umsatz_df = pd.read_sql(
-    "SELECT * FROM belegdaten LIMIT 100", 
+    "SELECT * FROM belegdaten", 
     mysql_engine
 )
 
 # ============================================================================ #
+# * Transformation, which needs to be done in EasyMorph
+umsatz_df = (
+    umsatz_df
+    .loc[~umsatz_df['Gruppe'].isin(["Intern / Marketing", "Kunststoffteile Lighting"])]
+    .assign(Datum=lambda x: pd.to_datetime(x['Datum']))  # Convert to datetime
+    .assign(Jahr=lambda x: x['Datum'].dt.year,          # Extract year
+            Monat=lambda x: x['Datum'].dt.month)        # Extract month
+    .loc[:, ['Datum', 'Jahr', 'Monat'] + [col for col in umsatz_df.columns if col not in ['Datum']]]  # Reorder columns
+)
+
+
+# ============================================================================ #
 # 2. Streamlit UI setup
 
-st.title("Pivottabelle Umsatz")
+st.title("Pivottabelle Umsatz (Ladezeit ca. 1-2 min)")
+st.text("Belege kategorisiert als Intern / Marketing und Kunststoffteile Lighting sind entfernt worden.")
 
 # Generate pivot table using pivot_ui
 html_file_path = os.path.join(os.getcwd(), 'preset_pivot.html')
