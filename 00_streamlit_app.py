@@ -10,16 +10,16 @@ st.set_page_config(
     page_icon = ":material/menu:"
 )
 
-# # CSS to hide the Streamlit menu and footer
-# hide_streamlit_style = """
-#     <style>
-#     #MainMenu {visibility: hidden;}
-#     footer {visibility: hidden;}
-#     [data-testid="stToolbar"] {visibility: hidden;}  /* Hides the entire toolbar including "Deploy" */
-#     [data-testid="stHeader"] {visibility: hidden;}   /* Hides the Streamlit header */
-#     </style>
-#     """
-# st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+# CSS to hide the Streamlit menu and footer
+hide_streamlit_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    [data-testid="stToolbar"] {visibility: hidden;}  /* Hides the entire toolbar including "Deploy" */
+    [data-testid="stHeader"] {visibility: hidden;}   /* Hides the Streamlit header */
+    </style>
+    """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 # Declare the authentication object using credentials and session settings from Streamlit secrets
 auth = Authenticate(
