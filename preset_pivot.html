@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>PivotTable.js</title>
+
+        <!-- external libs from cdnjs -->
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.css">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
+
+
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.19.0/pivot.min.css">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.19.0/pivot.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.19.0/d3_renderers.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.19.0/c3_renderers.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.19.0/export_renderers.min.js"></script>
+
+        <style>
+            body {font-family: Verdana;}
+            .node {
+              border: solid 1px white;
+              font: 10px sans-serif;
+              line-height: 12px;
+              overflow: hidden;
+              position: absolute;
+              text-indent: 2px;
+            }
+            .c3-line, .c3-focused {stroke-width: 3px !important;}
+            .c3-bar {stroke: white !important; stroke-width: 1;}
+            .c3 text { font-size: 12px; color: grey;}
+            .tick line {stroke: white;}
+            .c3-axis path {stroke: grey;}
+            .c3-circle { opacity: 1 !important; }
+            .c3-xgrid-focus {visibility: hidden !important;}
+        </style>
+    </head>
+    <body>
+        <script type="text/javascript">
+            $(function(){
+                if(window.location != window.parent.location)
+                    $("<a>", {target:"_blank", href:""})
+                        .text("[pop out]").prependTo($("body"));
+
+                $("#output").pivotUI(
+                    $.csv.toArrays($("#output").text()),
+                    $.extend({
+                        renderers: $.extend(
+                            $.pivotUtilities.renderers,
+                            $.pivotUtilities.c3_renderers,
+                            $.pivotUtilities.d3_renderers,
+                            $.pivotUtilities.export_renderers
+                            ),
+                        hiddenAttributes: [""]
+                    }, {"rows": ["Gruppe"], "cols": [], "vals": ["Umsatz"], "aggregatorName": "Sum", "rendererName": "Table"})
+                ).show();
+             });
+        </script>
+        <div id="output" style="display: none;">,Artikelnummer,Artikelstamm_1,Umsatz,Datum,Branchenname,Inland / Ausland,Gruppe
+0,5221004             ,LUNA ECO 1285mm PCO 1x28W 120° 3400lm                                                                                   ,1254.0,2023-12-05,Rexel International,Ausland,OTC
+1,5221015             ,LUNA ECO 1585mm PCO 1x39W 120° 6000lm                                                                                   ,1345.0,2023-12-05,Rexel International,Ausland,OTC
+2,5211014B            ,LUNA BL 1200mm PCO 1x39W 120° 5400lm                                                                                    ,3983.04,2023-12-05,Rexel International,Ausland,OTC
+3,5552135             ,"DV 3x1,5mm²  Set LUNA BL/PRO 1,5M                                                                                       ",4.35,2023-12-05,Rexel International,Ausland,OTC
+4,5231005B            ,KATLA BL 1540mm PCO 1x27W 120° 3800lm                                                                                   ,659.0,2023-12-05,Rexel International,Ausland,OTC
+5,5231005B            ,KATLA BL 1540mm PCO 1x27W 120° 3800lm                                                                                   ,-30.21,2023-12-05,Sonepar,Inland,OTC
+6,5211005             ,Leuchte LUNA BL 1500mm PCO 1x31W 3800lm                                                                                 ,-33.25,2023-12-05,Sonepar,Inland,OTC
+7,5211015B            ,LUNA BL 1500mm PCO 1x47W 120° 6500lm                                                                                    ,-43.64,2023-12-05,Mitegro,Inland,OTC
+8,9131121             ,KATLA REMADE 1205mm PCO 1x20W 120° 2800lm                                                                               ,-115.2,2023-12-05,Sonepar,Inland,Pro Line
+9,9612212             ,COMO BL d0380mm PC 1x135W 100° 20500lm CASAMBI Ready                                                                    ,-13230.0,2023-12-05,Sonepar,Inland,OTC
+10,5261180             ,LUNA N LED 1578mm LOPRA 1x52W 120° 6400lm                                                                               ,-1828.25,2023-12-05,Fegime,Inland,Pro Line Sonder
+11,9612212             ,COMO BL d0380mm PC 1x135W 100° 20500lm CASAMBI Ready                                                                    ,-2992.5,2023-12-05,Sonepar,Inland,OTC
+12,1251243             ,"LUNA-N 1x36W EVG, IP 66                                                                                                 ",-2895.2,2023-12-05,Sonepar,Inland,OTC
+13,1251243             ,"LUNA-N 1x36W EVG, IP 66                                                                                                 ",-153.25,2023-12-05,Fegime,Inland,OTC
+14,1251413             ,"LUNA-N 2x58W EVG, IP 66                                                                                                 ",-2193.18,2023-12-05,Sonepar,Inland,OTC
+15,1251413             ,"LUNA-N 2x58W EVG, IP 66                                                                                                 ",-225.42,2023-12-05,Fegime,Inland,OTC
+16,NRG9004             ,Wandkabelhalter RAL9005                                                                                                 ,162.4,2023-12-05,Sonepar,Inland,Energy
+17,NRG9000             ,Standfuß mit Regenschutzdach RAL9005                                                                                    ,1675.8,2023-12-05,GC-Gruppe,Inland,Energy
+18,NRG1024             ,PRACHT Ladestation ALPHA MONO XT 1x11kW                                                                                 ,1465.8,2023-12-05,GC-Gruppe,Inland,Energy
+19,NRG9000             ,Standfuß mit Regenschutzdach RAL9005                                                                                    ,1117.2,2023-12-05,Sonepar,Inland,Energy
+20,NRG1202             ,PRACHT Ladestation ALPHA XT 2x11kW                                                                                      ,1272.2,2023-12-05,EGE mit Zentralregulierung,Inland,Energy
+21,NRG1006             ,PRACHT Ladestation ALPHA DUO 1x11kW oder 2x6.9kW                                                                        ,1465.8,2023-12-05,Fegime,Inland,Energy
+22,NRG1024             ,PRACHT Ladestation ALPHA MONO XT 1x11kW                                                                                 ,244.3,2023-12-05,Fegime,Inland,Energy
+23,NRG9004             ,Wandkabelhalter RAL9005                                                                                                 ,20.3,2023-12-05,Fegime,Inland,Energy
+24,NRG9000             ,Standfuß mit Regenschutzdach RAL9005                                                                                    ,294.3,2023-12-05,DEHA,Inland,Energy
+25,0000083             ,Avocado Salz und Pfefferstreuer / Salt & Pepper                                                                         ,0.0,2023-12-05,Pracht,Inland,Intern / Marketing
+26,9131180             ,KATLA LED 1745mm PCO 1x52W 120° 6700lm                                                                                  ,510.08,2023-12-05,W.EG,Inland,Pro Line
+27,9131161             ,KATLA REMADE 1465mm PCO 1x37W 120° 4900lm                                                                               ,1046.4,2023-12-05,Mitegro,Inland,Pro Line
+28,9109003             ,KATLA ONE 1000mm PCO 1x17/23/32W 120° 2400/3500/4700lm                                                                  ,350.0,2023-12-05,Mitegro,Inland,Pro Line
+29,9131180             ,KATLA LED 1745mm PCO 1x52W 120° 6700lm                                                                                  ,1275.2,2023-12-05,Mitegro,Inland,Pro Line
+30,9131150             ,KATLA LED 1465mm PCO 1x26W 120° 3800lm                                                                                  ,514.0,2023-12-05,Mitegro,Inland,Pro Line
+31,9128115             ,KATLA SKII 1745mm PCO 1x20W 120° 2600lm                                                                                 ,120.71,2023-12-05,W.EG,Inland,Pro Line
+32,0692212             ,Kunststoff-LUNA-Clip 1-teilig aus POM                                                                                   ,57.0,2023-12-05,Mitegro,Inland,OTC
+33,7203389PR3890       ,TUBIS LED DALI DB 1260mm PO 1x39W 120° 3900lm                                                                           ,1003.56,2023-12-05,W.EG,Inland,Pro Line
+34,7203639             ,TUBIS N LED DALI 1260mm PO 1x37W 125° 5400lm                                                                            ,202.04,2023-12-05,Sonepar,Inland,Pro Line
+35,7560039m            ,Leuchte APOLLO N LED 1x33W DALI raum 1242mm PSR PO 4800lm                                                               ,818.6,2023-12-05,Zumtobel,Ausland,Pro Line
+36,7560030m            ,Leuchte APOLLO N LED 1x40W DALI raum 1542mm PSR PO 6100lm                                                               ,2637.67,2023-12-05,Zumtobel,Ausland,Pro Line
+37,7561029d            ,APOLLO N LED DALI 1242mm PM 1x25W 030° 3800lm                                                                           ,2455.79,2023-12-05,Zumtobel,Ausland,Pro Line
+38,7a231637            ,TUBIS LED INDUSTRY DALI 0725mm PO 1x19W 125° 2700lm                                                                     ,1211.26,2023-12-05,Zumtobel,Ausland,Pro Line
+39,7500018m            ,APOLLO N LED DALI 0971mm PO 1x15W 075° 2000lm                                                                           ,1576.58,2023-12-05,Zumtobel,Ausland,Pro Line
+40,05032454            ,TUBILUX XT 8500-840 PM L1260 EVG                                                                                        ,909.06,2023-12-05,Zumtobel,Ausland,Pro Line
+41,0508515             ,TUBILUX 5700-840 PM L1565 EVG TW                                                                                        ,1212.08,2023-12-05,Zumtobel,Ausland,Pro Line
+42,0508523             ,TUBILUX 4600-840 PM L1285 LDO TW                                                                                        ,1569.6,2023-12-05,Zumtobel,Ausland,Pro Line
+43,0508523             ,TUBILUX 4600-840 PM L1285 LDO TW                                                                                        ,2040.48,2023-12-05,Zumtobel,Ausland,Pro Line
+44,0704435             ,TUBIS Rohr 58W PO L= 1607mm                                                                                             ,50.25,2023-12-05,Zumtobel,Ausland,Pro Line
+45,05042449            ,TUBILUX XT 6300-840 PC L1260 LDO                                                                                        ,173.31,2023-12-05,Zumtobel,Ausland,Pro Line
+46,0508626             ,TUBILUX 6800-840 PM L1540 LDO                                                                                           ,25498.37,2023-12-05,Zumtobel,Ausland,Pro Line
+47,9711210             ,LTEC (Easy Connect) Einspeisung (links) klein 25A mit Endabdeckung                                                      ,219.9,2023-12-05,Sonepar AT,Ausland,Pro Line
+48,0508654             ,TUBILUX 4600-840 PM L1285 EVG TW                                                                                        ,139.52,2023-12-05,Zumtobel,Ausland,Pro Line
+49,0508515             ,TUBILUX 5700-840 PM L1565 EVG TW                                                                                        ,1666.61,2023-12-05,Zumtobel,Ausland,Pro Line
+50,05332429            ,TUBILUX XT 4500-840 PM L1285 LDO TW                                                                                     ,178.76,2023-12-05,Zumtobel,Ausland,Pro Line
+51,0508614             ,TUBILUX 4600-840 PM L1260 EVG                                                                                           ,1863.9,2023-12-05,Zumtobel,Ausland,Pro Line
+52,0508614830          ,TUBILUX 4600-830 PM L1260 EVG                                                                                           ,745.56,2023-12-05,Zumtobel,Ausland,Pro Line
+53,5552162             ,"LED Driver für LUNA BL 43W, 1,2m                                                                                        ",19.0,2023-12-05,Partner Ausland,Ausland,OTC
+54,0508615             ,TUBILUX 5700-840 PM L1540 EVG                                                                                           ,1384.3,2023-12-05,Zumtobel,Ausland,Pro Line
+55,7530014wSO2         ,APOLLO N LED 1x19W breit 1242mm PSR PO 2700lm                                                                           ,459.4,2023-12-05,,,Pro Line
+56,0001300             ,918010865                                                                                                               ,0.0,2023-12-05,,,Pro Line
+57,5261175SO5          ,LUNA N LED SKII 1597mm LOPRA 1x31W 120° 4800lm                                                                          ,768.2,2023-12-05,ETL Schlegel Gruppe,Inland,Pro Line Sonder
+58,0692602             ,Baugruppe Fassungsgehäuse geschlossen Apollo G2 1-lampig                                                                ,0.0,2023-12-05,,,Pro Line
+59,5211015B            ,LUNA BL 1500mm PCO 1x47W 120° 6500lm                                                                                    ,0.0,2023-12-05,,,OTC
+60,9131156             ,KATLA REMADE DALI 1465mm PCO 1x29W 120° 3800lm                                                                          ,0.0,2023-12-05,Sonepar,Inland,Pro Line
+61,NRG1002             ,PRACHT Ladestation ALPHA XT 2x11kW                                                                                      ,0.0,2023-12-05,W.EG,Inland,Energy
+62,NRG8015             ,Türschloss komplett für Tür 200x300x130 schwarz                                                                         ,0.0,2023-12-05,Fegime,Inland,Energy
+63,NRG0138             ,Kurzschlussbrücke mit Grifflasche rot                                                                                   ,0.0,2023-12-05,Sonepar,Inland,Energy
+64,1251373             ,"LUNA-N 1x58W EVG, IP 66                                                                                                 ",-8145.24,2023-12-05,Sonepar,Inland,OTC
+65,1251243             ,"LUNA-N 1x36W EVG, IP 66                                                                                                 ",-2000.32,2023-12-05,Sonepar,Inland,OTC
+66,5211015B            ,LUNA BL 1500mm PCO 1x47W 120° 6500lm                                                                                    ,3984.0,2023-12-05,Sonepar,Inland,OTC
+67,5211005B            ,LUNA BL 1500mm PCO 1x27W 120° 3800lm                                                                                    ,6432.0,2023-12-05,Sonepar,Inland,OTC
+68,5211004B            ,LUNA BL 1200mm PCO 1x20W 120° 2800lm                                                                                    ,66.78,2023-12-05,W.EG,Inland,OTC
+69,5211015B            ,LUNA BL 1500mm PCO 1x47W 120° 6500lm                                                                                    ,4189.44,2023-12-05,Fegime,Inland,OTC
+70,5211005B            ,LUNA BL 1500mm PCO 1x27W 120° 3800lm                                                                                    ,3349.44,2023-12-05,Fegime,Inland,OTC
+71,9602112             ,COMO BL d0380mm PC 1x180W 060° 27000lm CASAMBI Ready                                                                    ,2090.0,2023-12-05,Mitegro,Inland,OTC
+72,5211004B            ,LUNA BL 1200mm PCO 1x20W 120° 2800lm                                                                                    ,100.17,2023-12-05,Mitegro,Inland,OTC
+73,5240034             ,TUBIS BL 1330mm PO 1x36W 130° 5400lm                                                                                    ,344.5,2023-12-05,Mitegro,Inland,OTC
+74,5211014B            ,LUNA BL 1200mm PCO 1x39W 120° 5400lm                                                                                    ,414.9,2023-12-05,Mitegro,Inland,OTC
+75,5211015B            ,LUNA BL 1500mm PCO 1x47W 120° 6500lm                                                                                    ,948.6,2023-12-05,Mitegro,Inland,OTC
+76,0604235             ,Wanne LUNA N 1x58W PC                                                                                                   ,62.2,2023-12-05,DEHA,Inland,OTC
+77,5231014B            ,KATLA BL 1240mm PCO 1x38W 120° 5400lm                                                                                   ,37.83,2023-12-05,Fegime,Inland,OTC
+78,5211014B            ,LUNA BL 1200mm PCO 1x39W 120° 5400lm                                                                                    ,3320.79,2023-12-05,Fegime,Inland,OTC
+79,5211014B            ,LUNA BL 1200mm PCO 1x39W 120° 5400lm                                                                                    ,0.0,2023-12-05,Fegime,Inland,OTC
+80,5261180             ,LUNA N LED 1578mm LOPRA 1x40W 120° 6400lm                                                                               ,921.48,2023-12-05,DEHA,Inland,Pro Line Sonder
+81,5240035             ,TUBIS BL 1629mm PO 1x42W 130° 6500lm                                                                                    ,1898.1,2023-12-05,DEHA,Inland,OTC
+82,5231004B            ,KATLA BL 1240mm PCO 1x20W 120° 2800lm                                                                                   ,263.4,2023-12-05,DEHA,Inland,OTC
+83,5212204             ,LUNA RETRO SET 1284mm PCi 1x17W 165° 2200lm                                                                             ,47.7,2023-12-05,W.EG,Inland,OTC
+84,5240034             ,TUBIS BL 1330mm PO 1x36W 130° 5400lm                                                                                    ,5143.32,2023-12-05,W.EG,Inland,OTC
+85,5240035             ,TUBIS BL 1629mm PO 1x42W 130° 6500lm                                                                                    ,632.7,2023-12-05,DEHA,Inland,OTC
+86,5211012             ,LUNA BL 0600mm PCO 1x20W 120° 2500lm                                                                                    ,526.8,2023-12-05,DEHA,Inland,OTC
+87,5211005B            ,LUNA BL 1500mm PCO 1x27W 120° 3800lm                                                                                    ,6698.88,2023-12-05,DEHA,Inland,OTC
+88,5231014B            ,KATLA BL 1240mm PCO 1x38W 120° 5400lm                                                                                   ,675.8,2023-12-05,DEHA,Inland,OTC
+89,0709487             ,Karton 11er PRACHT incl. Bierflaschen Steini                                                                            ,0.0,2023-12-05,,,Intern / Marketing
+90,Reklamation         ,9300212w                                                                                                                ,0.0,2023-12-05,W.EG,Inland,
+91,12410605            ,ELTROPA Leuchte ELU 30-s 1578mm 1x30W PMMA opal 4100lm                                                                  ,-34.02,2023-12-05,Mitegro,Inland,OTC
+92,1251113             ,"LUNA-N 1x18W EVG, IP 66                                                                                                 ",-126.9,2023-12-05,Sonepar,Inland,OTC
+93,5212104             ,LUNA BL RETRO 1284mm max. 1x25W PCi                                                                                     ,-294.0,2023-12-05,Sonepar,Inland,OTC
+94,5240024             ,TUBIS BL 1330mm PO 1x20W 130° 2800lm                                                                                    ,2667.5,2023-12-05,Fegime,Inland,OTC
+95,5231004B            ,Leuchte KATLA BL 1240mm PCO 1x20W 2800lm                                                                                ,2844.72,2023-12-05,Mitegro,Inland,OTC
+96,12410607            ,ELTROPA Leuchte ELU 50-s 1578mm 1x50W PMMA opal 6700lm                                                                  ,-44.35,2023-12-05,Mitegro,Inland,OTC
+97,7273610830          ,TUBIS N LED DALI 1565mm PO 1x38W 125° 5600lm                                                                            ,1457.76,2023-12-06,Sonepar,Inland,Pro Line
+98,NRG9003             ,RFID-Karte 5er Set                                                                                                      ,20.3,2023-12-06,Mitegro,Inland,Energy
+99,NRG9003             ,RFID-Karte 5er Set                                                                                                      ,40.6,2023-12-06,Mitegro,Inland,Energy
+</div>
+    </body>
+</html>

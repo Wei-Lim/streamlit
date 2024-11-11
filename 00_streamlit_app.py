@@ -3,7 +3,12 @@ import pandas as pd
 from streamlit_ldap_authenticator import Authenticate
 
 # Set up the Streamlit page with a title and an icon
-st.set_page_config(page_title="Daten-Apps", page_icon=":material/menu:")
+st.set_page_config(
+    layout = "wide",
+    page_title = "Daten-Apps", 
+    initial_sidebar_state = "auto",
+    page_icon = ":material/menu:"
+)
 
 # CSS to hide the Streamlit menu and footer
 hide_streamlit_style = """
@@ -55,7 +60,7 @@ if user is not None:
         all_apps = {
             "pim": st.Page("01_pim.py", title="PIM Abgleich", icon=":material/inventory:"),
             "epd": st.Page("02_epd.py", title="EPD Daten", icon=":material/eco:"),
-            "plty": st.Page("03_plotly.py", title="Vertriebsstatistik", icon=":material/monitoring:"),
+            "pvt": st.Page("03_pvt.py", title="Umsatz Pivottabelle", icon=":material/table_view:"),
             "test": st.Page("99_test_app.py", title="Test App", icon=":material/bug_report:")
         }
 
