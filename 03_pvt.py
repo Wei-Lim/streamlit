@@ -29,21 +29,18 @@ mysql_con_string = f"mysql+pymysql://{user}:{password}@{host}/{database}"
 mysql_engine = create_engine(mysql_con_string)
 
 umsatz_df = pd.read_sql(
-    "SELECT * FROM belegdaten", 
+    "SELECT * FROM belegdaten WHERE Jahr >= YEAR(CURDATE()) - 5;", 
     mysql_engine
 )
 
-# ============================================================================ #
-# * Transformation, which needs to be done in EasyMorph
 umsatz_df = (
     umsatz_df
-    .loc[~umsatz_df['Gruppe'].isin(["Intern / Marketing", "Kunststoffteile Lighting"])]
-    .assign(Datum=lambda x: pd.to_datetime(x['Datum']))  # Convert to datetime
-    .assign(Jahr=lambda x: x['Datum'].dt.year,          # Extract year
-            Monat=lambda x: x['Datum'].dt.month)        # Extract month
-    .loc[:, ['Datum', 'Jahr', 'Monat'] + [col for col in umsatz_df.columns if col not in ['Datum']]]  # Reorder columns
+    .drop(columns='Datum')  # Drop 'Datum' column
+    .pipe(lambda d: d.assign(
+        Jahr=d['Jahr'].astype(int),    # Convert 'Jahr' to integer
+        Monat=d['Monat'].astype(int)   # Convert 'Monat' to integer
+    ))
 )
-
 
 # ============================================================================ #
 # 2. Streamlit UI setup
@@ -57,7 +54,7 @@ pivot_ui(
     umsatz_df, 
     outfile_path   = html_file_path, 
     rows           = ["Gruppe"], 
-    cols           = [], 
+    cols           = ["Jahr"], 
     vals           = ["Umsatz"], 
     aggregatorName = "Sum", 
     rendererName   = "Table"
