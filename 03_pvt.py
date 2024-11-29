@@ -8,9 +8,6 @@ from pivottablejs import pivot_ui
 from sqlalchemy import create_engine
 # pip install SQLAlchemy pymysql
 
-
-
-
 # ============================================================================ #
 # Set Streamlit layout to wide mode
 # st.set_page_config(layout="wide")
@@ -37,8 +34,8 @@ umsatz_df = (
     umsatz_df
     .drop(columns='Datum')  # Drop 'Datum' column
     .pipe(lambda d: d.assign(
-        Jahr=d['Jahr'].astype(int),    # Convert 'Jahr' to integer
-        Monat=d['Monat'].astype(int)   # Convert 'Monat' to integer
+        Jahr  = d['Jahr'].astype(int),   # Convert 'Jahr' to integer
+        Monat = d['Monat'].astype(int)   # Convert 'Monat' to integer
     ))
 )
 
