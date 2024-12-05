@@ -43,7 +43,7 @@ umsatz_df = (
 # 2. Streamlit UI setup
 
 st.title("Pivottabelle Umsatz (Ladezeit ca. 1-2 min)")
-st.text("Belege kategorisiert als Intern / Marketing und Kunststoffteile Lighting sind entfernt worden.")
+st.text('Belege kategorisiert als "Intern / Marketing" und "Kunststoffteile Lighting" sind entfernt worden. Nur die Belegdaten (4 - Rechnung) der letzten 5 Jahren werden geladen')
 
 # Generate pivot table using pivot_ui
 html_file_path = os.path.join(os.getcwd(), 'preset_pivot.html')
