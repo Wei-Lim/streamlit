@@ -26,13 +26,18 @@ mysql_con_string = f"mysql+pymysql://{user}:{password}@{host}/{database}"
 mysql_engine = create_engine(mysql_con_string)
 
 umsatz_df = pd.read_sql(
-    "SELECT * FROM belegdaten WHERE Jahr >= YEAR(CURDATE()) - 5;", 
+    """
+        SELECT 
+            Jahr, Monat, Umsatz, Menge, Artikelnummer, Artikelstamm_1, 
+            Modell, Gruppe, Linie, Branchenname, `Inland / Ausland`
+        FROM belegdaten 
+        WHERE Jahr >= YEAR(CURDATE()) - 5;
+    """, 
     mysql_engine
 )
 
 umsatz_df = (
     umsatz_df
-    .drop(columns='Datum')  # Drop 'Datum' column
     .pipe(lambda d: d.assign(
         Jahr  = d['Jahr'].astype(int),   # Convert 'Jahr' to integer
         Monat = d['Monat'].astype(int)   # Convert 'Monat' to integer
@@ -42,7 +47,8 @@ umsatz_df = (
 # ============================================================================ #
 # 2. Streamlit UI setup
 
-st.title("Pivottabelle Umsatz (Ladezeit ca. 1-2 min)")
+st.title("Pivottabelle Umsatz / Menge (Ladezeit ca. 1-2 min)")
+st.markdown("**!!!! Die Kundendaten (Branchenname) sind noch nicht final bearbeitet !!!!**")
 st.text('Belege kategorisiert als "Intern / Marketing" und "Kunststoffteile Lighting" sind entfernt worden. Nur die Belegdaten (4 - Rechnung) der letzten 5 Jahren werden geladen')
 
 # Generate pivot table using pivot_ui
