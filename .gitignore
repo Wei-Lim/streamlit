@@ -2,3 +2,4 @@
 .streamlit/
 0_data/kajspo.csv
 0_data/jk_table_kajspo_col_names.csv
+0_data/user_authorised.txt
