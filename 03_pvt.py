@@ -1,29 +1,32 @@
 # ============================================================================ #
-# 0 Import packages
+# 0 Importiere Pakete
 
 import streamlit as st
 import pandas as pd
 import os
 from pivottablejs import pivot_ui
 from sqlalchemy import create_engine
-# pip install SQLAlchemy pymysql
+import uuid  # Zur Generierung einer eindeutigen Sitzungs-ID
+from datetime import date
+from sqlalchemy import text  # Importiere `text` für SQL-Abfragen
 
 # ============================================================================ #
-# Set Streamlit layout to wide mode
+# Setze Streamlit-Layout auf den Breitbildmodus
 # st.set_page_config(layout="wide")
 
 # ============================================================================ #
-# 1 Load Data
-# umsatz_df = pd.read_csv("0_data/umsatz.csv")
+# 1 MySQL-Verbindung einrichten
 
-# MySQL connection
-user        = 'William'
-password    = 'Will1510!'
-host        = '192.168.131.8' 
-database    = 'stats'
+benutzer     = 'easymorph'
+passwort     = 'Morpheus24'
+host         = '192.168.131.8' 
+datenbank    = 'stats'
 
-mysql_con_string = f"mysql+pymysql://{user}:{password}@{host}/{database}"
-mysql_engine = create_engine(mysql_con_string)
+mysql_verbindungs_string = f"mysql+pymysql://{benutzer}:{passwort}@{host}/{datenbank}"
+mysql_engine = create_engine(mysql_verbindungs_string)
+
+# ============================================================================ #
+# 2 Daten aus MySQL laden
 
 umsatz_df = pd.read_sql(
     """
@@ -39,34 +42,81 @@ umsatz_df = pd.read_sql(
 umsatz_df = (
     umsatz_df
     .pipe(lambda d: d.assign(
-        Jahr  = d['Jahr'].astype(int),   # Convert 'Jahr' to integer
-        Monat = d['Monat'].astype(int)   # Convert 'Monat' to integer
+        Jahr  = d['Jahr'].astype(int),   # Konvertiere 'Jahr' in einen Integer-Wert
+        Monat = d['Monat'].astype(int)   # Konvertiere 'Monat' in einen Integer-Wert
     ))
 )
 
 # ============================================================================ #
-# 2. Streamlit UI setup
+# 3 Streamlit-Benutzeroberfläche einrichten
 
-st.title("Pivottabelle Umsatz / Menge (Ladezeit ca. 1-2 min)")
+st.title("Pivottabelle: Umsatz / Menge (Ladezeit ca. 1-2 Min.)")
 st.markdown("**!!!! Die Kundendaten (Branchenname) sind noch nicht final bearbeitet !!!!**")
-st.text('Belege kategorisiert als "Intern / Marketing" und "Kunststoffteile Lighting" sind entfernt worden. Nur die Belegdaten (4 - Rechnung) der letzten 5 Jahren werden geladen')
+st.text('Belege, die als "Intern / Marketing" und "Kunststoffteile Lighting" kategorisiert sind, wurden entfernt. '
+        'Es werden nur die Belegdaten (4 - Rechnung) der letzten 5 Jahre geladen.')
 
-# Generate pivot table using pivot_ui
-html_file_path = os.path.join(os.getcwd(), 'preset_pivot.html')
+# Pivot-Tabelle mit pivot_ui generieren
+html_datei_pfad = os.path.join(os.getcwd(), 'vorgabe_pivot.html')
 pivot_ui(
     umsatz_df, 
-    outfile_path   = html_file_path, 
+    outfile_path   = html_datei_pfad, 
     rows           = ["Gruppe"], 
     cols           = ["Jahr"], 
     vals           = ["Umsatz"], 
-    aggregatorName = "Sum", 
-    rendererName   = "Table"
+    aggregatorName = "Summe", 
+    rendererName   = "Tabelle"
 )
 
-# Display the pivot table in Streamlit
+# Pivot-Tabelle in Streamlit anzeigen
 st.components.v1.html(
-    open(html_file_path, 'r').read(), 
+    open(html_datei_pfad, 'r').read(), 
     scrolling = True, 
-    height    = 600,  # Increase height to fit more of the screen
-    # width=1500    # Increase width to fit more of the screen
+    height    = 600,  # Höhe erhöhen, um mehr Inhalt anzuzeigen
 )
+
+# ============================================================================ #
+# 4 Zugriff pro Tag protokollieren
+
+def zugriff_protokollieren():
+    """Protokolliert den täglichen Zugriff für jede eindeutige Sitzung."""
+    # Initialisiere `session_id`, falls noch nicht gesetzt
+    if "session_id" not in st.session_state:
+        st.session_state.session_id = str(uuid.uuid4())  # Generiere eine eindeutige Sitzungs-ID
+
+    # Sitzungsinformationen in die Datenbank einfügen
+    try:
+        with mysql_engine.begin() as conn:  # Automatisches Commit sicherstellen
+            conn.execute(
+                text("""
+                    INSERT IGNORE INTO pvt_access_logs (session_id, access_date)
+                    VALUES (:session_id, :access_date)
+                """),
+                {"session_id": st.session_state.session_id, "access_date": date.today()}
+            )
+        st.success("Zugriff erfolgreich protokolliert.")
+    except Exception as e:
+        st.error(f"Zugriffsprotokollierung fehlgeschlagen: {e}")
+
+# ============================================================================ #
+# 5 Zugriffsstatistiken anzeigen (Optional)
+
+def zugriffsstatistiken_abrufen():
+    """Ruft tägliche Zugriffsstatistiken ab."""
+    with mysql_engine.connect() as conn:
+        result = conn.execute(
+            text("""
+                SELECT access_date, COUNT(*) AS daily_users
+                FROM pvt_access_logs
+                GROUP BY access_date
+                ORDER BY access_date DESC
+                LIMIT 7
+            """)
+        )
+        return pd.DataFrame(result.fetchall(), columns=["Datum", "Benutzer"])
+
+st.subheader("Tägliche Zugriffsstatistiken")
+
+# Funktion zum Protokollieren von Zugriffen aufrufen
+zugriff_protokollieren()
+zugriffsstatistiken = zugriffsstatistiken_abrufen()
+st.dataframe(zugriffsstatistiken)
