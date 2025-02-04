@@ -63,8 +63,8 @@ pivot_ui(
     rows           = ["Gruppe"], 
     cols           = ["Jahr"], 
     vals           = ["Umsatz"], 
-    aggregatorName = "Summe", 
-    rendererName   = "Tabelle"
+    aggregatorName = "Sum", 
+    rendererName   = "Table"
 )
 
 # Pivot-Tabelle in Streamlit anzeigen
